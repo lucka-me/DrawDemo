@@ -3,11 +3,12 @@
 <h1 align=center>DrawDemo</h1>
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-brightgreen.svg"/>
+  <a href="https://github.com/lucka-me/DrawDemo/releases/tag/1.0.0"><img alt="Version" src="https://img.shields.io/badge/version-1.0.0-brightgreen.svg"/></a>
   <a href="https://lucka.moe"><img alt="Author" src="https://img.shields.io/badge/author-Lucka-5880C8.svg"/></a>
-  <img alt="License" src="https://img.shields.io/badge/license-MIT-green.svg"/><br>
-  <img alt="Platform" src="https://img.shields.io/badge/platform-Windows-137AD4.svg"/>
-  <img alt="IDE" src="https://img.shields.io/badge/IDE-Visual_Studio_Community_2017-8662C2.svg"/>
+  <a href="./LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT-green.svg"/></a><br>
+  <a href="https://www.visualstudio.com/zh-hans/vs/community/"><img alt="IDE" src="https://img.shields.io/badge/IDE-Visual_Studio_Community_2017-8662C2.svg"/></a>
+  <a href="https://www.microsoft.com/zh-cn/windows/"><img alt="Platform" src="https://img.shields.io/badge/platform-Windows-137AD4.svg"/></a>
+  
 </p>
 <p align="center">
   基于微软基础类库（<b>M</b>icrosoft <b>F</b>oundation <b>C</b>lasses）开发的矢量绘图软件<br>
