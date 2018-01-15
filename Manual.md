@@ -43,11 +43,11 @@
 ### 主界面及菜单
 主程序界面由菜单栏、工具栏、绘图区域和状态栏构成。
 
-<div align=center><img src="./Resource/Screenshot-MainFrame.png" alt="CDrawDemoView"></div>
+<div align=center><img src="./Resource/Screenshot/MainFrame.png" alt="CDrawDemoView"></div>
 
 ### 画笔宽度设置对话框
 画笔宽度设置对话框由设置滑条、笔宽显示和笔宽预览区域构成。
-<div align=center><img src="./Resource/Screenshot-CPenWidthDialog.png" alt="CPenWidthDialog"></div>
+<div align=center><img src="./Resource/Screenshot/CPenWidthDialog.png" alt="CPenWidthDialog"></div>
 
 ## 数据结构设计
 ### ElementType
