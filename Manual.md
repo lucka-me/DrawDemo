@@ -693,7 +693,7 @@ DrawDemo 中负责操作主视图的类，包含绘图和编辑所需的所有�
 
 
 ## 参考资料
-- [CTypedPtrArray Class | MSDN]("https://msdn.microsoft.com/zh-cn/library/sdbk3yw6.aspx")
+- [CTypedPtrArray Class | MSDN](https://msdn.microsoft.com/zh-cn/library/sdbk3yw6.aspx)
 - [MFC 双缓冲解决图象闪烁 | CSDN 博客](http://blog.csdn.net/tiaotiaoyly/article/details/2516235)
 - [SetROP2 函数 ——设置前景色与背景色 | CSDN 博客](http://blog.csdn.net/p40614021/article/details/8217328)<br>利用颜色模式擦除橡皮筋
 - [How do I get a pointer to the Main Frame object (MFC/SDI) | codeguru](http://forums.codeguru.com/showthread.php?167027-How-do-I-get-a-pointer-to-the-Main-Frame-object-(MFC-SDI))<br>访问 MainFrame
