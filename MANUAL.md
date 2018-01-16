@@ -18,8 +18,8 @@
 </p>
 
 ## 基本信息
-- 程序名称：DrawDemo
-- 程序类型：MFC 单文档应用程序
+- 软件名称：DrawDemo
+- 软件类型：MFC 单文档应用程序
 
 ## 开发环境
 - 操作系统：Windows 10
@@ -41,7 +41,7 @@
   - 画线、折线、矩形和椭圆时显示橡皮线
 - 在绘图、编辑时显示鼠标坐标
 - 工具栏操作
-- 注册表操作，包括快捷键注册、工具栏注册、`.ddd` 文档类型和文档图标注册。
+- 注册表操作，包括快捷键注册、工具栏注册、`.ddd` 文档类型和文档图标注册
 - 快捷键操作
 
 ### 快捷键列表
@@ -66,10 +66,10 @@
 <div align=center><img src="./Resource/Document-Icon.png" alt="DrawDemo Draw"></div>
 
 ## 用户界面设计
-### 主界面及菜单
-主程序界面由菜单栏、工具栏、绘图区域和状态栏构成。
+为本程序设计和制作的用户界面主要包括主视图和画笔宽度设置对话框两个界面。
 
-工具栏可通过 MFC 默认提供的编辑器自由修改。
+### 主视图及菜单
+软件主视图由菜单栏、工具栏、绘图区域和状态栏构成，其中工具栏可通过 MFC 默认提供的编辑器自由修改。
 
 <div align=center><img src="./Resource/Screenshot/MainFrame.png" alt="CDrawDemoView"></div>
 
@@ -79,6 +79,8 @@
 <div align=center><img src="./Resource/Screenshot/CPenWidthDialog.png" alt="CPenWidthDialog"></div>
 
 ## 数据结构设计
+本程序的核心数据结构包括 `CObject` 的派生类 `Element` 和其派生类 `EPoint`、`ELine`、`EPolyline`、`ERectangle`、`EPolygon`、`EEllipse`，它们用于存储各种图形、进行图形变换，以及用于存储图形的指针数组 `ElementArray`，同时还有控制主视图的 `CDrawDemoView` 及控制画笔宽度设置对话框的 `CPenWidthDialog` 类。
+
 ### ElementType
 用于标识 `Element` 图形的子类类型。
 
