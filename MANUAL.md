@@ -19,7 +19,7 @@
   - 设置画笔颜色、填充颜色、橡皮筋颜色、画笔宽度、橡皮筋宽度
   - 取消操作
 - 绘图
-  - 画点、线、折线、矩形、椭圆
+  - 画点、线、折线、矩形、多边形<sup>`1.1.0`</sup>、椭圆
   - 画线、折线、矩形和椭圆时显示橡皮线
 - 快捷键操作
 - 工具栏操作
@@ -66,6 +66,7 @@ typedef enum _ElementType
 | `ET_LINE`      | 线，`ELine`
 | `ET_POLYLINE`  | 折线，`EPolyline`
 | `ET_RECTANGLE` | 矩形，`ERectangle`
+| `ET_POLYGON`   | 多边形，`EPolygon`<sup>`1.1.0`</sup>
 | `ET_ELLIPSE`   | 椭圆，`EEllipse`
 
 ### enum Operation
@@ -74,11 +75,12 @@ typedef enum _ElementType
 | Name                    | Description
 | :---------------------- | :----------
 | `OPR_NONE` 							| 无操作
-| `OPR_DRAW_POINT` 				| 画点
-| `OPR_DRAW_LINE` 				| 画线
-| `OPR_DRAW_POLYLINE`			| 画折线
-| `OPR_DRAW_RECTANGLE` 		| 画矩形
-| `OPR_DRAW_ELLIPSE` 			| 画椭圆
+| `OPR_DRAW_POINT` 				| 绘制点
+| `OPR_DRAW_LINE` 				| 绘制线
+| `OPR_DRAW_POLYLINE`			| 绘制折线
+| `OPR_DRAW_RECTANGLE` 		| 绘制矩形
+| `OPR_DRAW_POLYLINE`     | 绘制多边形<sup>`1.1.0`</sup>
+| `OPR_DRAW_ELLIPSE` 			| 绘制椭圆
 | `OPR_EDIT_SELECT` 			| 点选
 | `OPR_EDIT_SELECT_RANGE` | 选取范围
 | `OPR_EDIT_MOVE`         | 移动
@@ -100,6 +102,7 @@ DrawDemo 的核心类，是所有图形类的基类，提供序列化、获取�
 - `ELine`
 - `EPolyline`
 - `ERectangle`
+- `EPolygon`<sup>`1.1.0`</sup>
 - `EEllipse`
 
 #### 成员
@@ -392,7 +395,7 @@ void SetLineWidth(unsigned short newWidth);
 ```cpp
 void DrawLast(CDC & dc);
 ```
-在 `dc` 上绘制最后一段线，用于提高绘图时的效率。
+在 `dc` 上绘制最后一段线及最后的节点，用于提高绘图时的效率。
 
 ### ERectangle
 表示矩形图形，用一对对角定点确定位置和大小。在重写 `Element` 所有方法的基础上提供设置对角顶点、设置颜色、设置填充和设置线宽的方法。
@@ -428,7 +431,7 @@ void DrawLast(CDC & dc);
 ```cpp
 ERectangle();
 ```
-默认构造函数，将线宽初始化为1。
+默认构造函数，将线宽初始化为1，并将填充初始化为白色 `RGB(255, 255, 255)`。
 
 #### ERectangle::~ERectangle
 ```cpp
@@ -459,6 +462,94 @@ void SetFillColor(COLORREF newFillColor);
 void SetLineWidth(unsigned short newLineWidth);
 ```
 设置线宽为 `newLineWidth`。
+
+
+### EPolygon<sup>`1.1.0`</sup>
+表示多边形图形，在重写 `Element` 所有方法的基础上提供设置/增加节点、设置颜色、设置填充、设置线宽和绘制最后一段线的方法。
+
+在移动、缩放、旋转时实际上是对 `nodeList` 中各 `EPoint` 成员进行相应的操作。
+
+#### 继承关系
+##### 基类
+- `Element`
+
+#### 成员
+以下列出新增的成员。
+
+##### 公共方法
+| Name                      | Description
+| :------------------------ | :----------
+| `EPolygon::EPolygon`      | 默认构造函数
+| `EPolygon::~EPolygon`     | 默认析构函数
+| `EPolygon::Set`           | 设置折线的首两个节点
+| `EPolygon::Add`           | 添加节点
+| `EPolygon::SetLineColor`  | 设置颜色
+| `EPolygon::SetFillColor`  | 设置填充
+| `EPolygon::SetLineWidth`  | 设置线宽
+| `EPolygon::GetCPointList` | 获取 `CPoint` 类型的节点数组
+| `EPolygon::DrawLast`      | 绘制最后一段线
+
+##### 私有变量
+| Name                  | Type           | Description
+| :-------------------- | :------------- | :----------
+| `EPolygon::nodeList`  | `ElementArray` | 节点列表
+| `EPolygon::lineWidth` | `int`          | 线宽
+| `EPolygon::fillColor` | `COLORREF`     | 填充
+
+#### EPolygon::EPolyline
+```cpp
+EPolyline();
+```
+默认构造函数，将线宽初始化为1，并将填充初始化为白色 `RGB(255, 255, 255)`。
+
+#### EPolygon::~EPolyline
+```cpp
+~EPolyline();
+```
+默认析构函数。
+
+#### EPolygon::Set
+```cpp
+void Set(CPoint startNode, CPoint secondNode);
+```
+清空 `nodeList` ，设置多边形的首两个节点为 `startNode` 和 `secondNode` 并将之加入 `nodeList` 中。
+
+#### EPolygon::Add
+```cpp
+void Add(CPoint newNode);
+```
+将节点 `newNode` 加入 `nodeList` 中。
+
+#### EPolygon::SetLineColor
+```cpp
+void SetLineColor(COLORREF newColor);
+```
+设置线颜色为 `newColor`。
+
+#### EPolygon::SetFillColor
+```cpp
+void SetFillColor(COLORREF newColor);
+```
+设置填充为 `newColor`。
+
+#### EPolygon::SetLineWidth
+```cpp
+void SetLineWidth(unsigned short newWidth);
+```
+设置线宽为 `newWidth`。
+
+#### EPolygon::GetCPointList
+```cpp
+CPoint * GetCPointList();
+```
+获取 `CPoint` 类的节点数组，可用于 `CDC::Polygon` 绘制多边形。
+
+#### EPolygon::DrawLast
+```cpp
+void DrawLast(CDC & dc);
+```
+在 `dc` 上绘制最后一段线，用于提高绘图时的效率。
+
 
 ### EEllipse
 表示矩形图形，以外接矩形的对角顶点确定位置和大小。在重写 `Element` 所有方法的基础上提供设置外接矩形对角顶点、设置颜色、设置填充和设置线宽的方法。
@@ -494,7 +585,7 @@ void SetLineWidth(unsigned short newLineWidth);
 ```cpp
 EEllipse();
 ```
-默认构造函数，将线宽初始化为1。
+默认构造函数，将线宽初始化为1，并将填充初始化为白色 `RGB(255, 255, 255)`。
 
 #### EEllipse::~EEllipse
 ```cpp

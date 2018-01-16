@@ -17,6 +17,7 @@ typedef enum _ElementType {
 	ET_LINE,		// 线
 	ET_POLYLINE,	// 折线
 	ET_RECTANGLE,	// 矩形
+	ET_POLYGON,		// 多边形
 	ET_ELLIPSE,		// 椭圆
 } ElementType;
 

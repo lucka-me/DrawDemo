@@ -1,174 +1,182 @@
 #include "stdafx.h"
-#include "EPolyline.h"
+#include "EPolygon.h"
 
-IMPLEMENT_SERIAL(EPolyline, CObject, 1)
-EPolyline::EPolyline() {
-	width = 1;
+IMPLEMENT_SERIAL(EPolygon, CObject, 1)
+EPolygon::EPolygon() {
+	lineWidth = 1;
+	fillColor = RGB(255, 255, 255);
 }
 
-EPolyline::~EPolyline() {
+
+EPolygon::~EPolygon() {
 }
 
-void EPolyline::Serialize(CArchive & ar) {
+void EPolygon::Serialize(CArchive & ar) {
 	Element::Serialize(ar);
 
 	nodeList.Serialize(ar);
 	if (ar.IsStoring()) {
-		ar << width;
+		ar << lineWidth;
 	}
 	else {
-		ar >> width;
+		ar >> lineWidth;
 
 	}
 }
 
-ElementType EPolyline::GetElementType() {
-	return ET_POLYLINE;
+ElementType EPolygon::GetElementType() {
+	return ET_POLYGON;
 }
 
-void EPolyline::Set(CPoint startNode, CPoint secondNode) {
+void EPolygon::Set(CPoint startNode, CPoint secondNode) {
 	nodeList.RemoveAll();
 	Add(startNode);
 	Add(secondNode);
 }
 
-void EPolyline::Add(CPoint newNode) {
+void EPolygon::Add(CPoint newNode) {
 	EPoint *pNewNode = new EPoint;
 	pNewNode->Set(newNode);
 	pNewNode->SetColor(color);
 	nodeList.Add(pNewNode);
 }
 
-void EPolyline::SetLineColor(COLORREF newColor) {
+void EPolygon::SetLineColor(COLORREF newColor) {
 	color = newColor;
 }
 
-void EPolyline::SetLineWidth(unsigned short newWidth) {
-	width = newWidth;
+void EPolygon::SetLineWidth(unsigned short newWidth) {
+	lineWidth = newWidth;
 }
 
-void EPolyline::Draw(CDC &dc) {
+void EPolygon::SetFillColor(COLORREF newFillColor) {
+	fillColor = newFillColor;
+}
+
+CPoint * EPolygon::GetCPointList() {
+	CPoint * pList = new CPoint[nodeList.GetSize()];
+	for (int i = 0; i < nodeList.GetSize(); i++) {
+		EPoint * point = (EPoint *)nodeList[i];
+		pList[i] = point->GetCPoint();
+	}
+	return pList;
+}
+
+void EPolygon::Draw(CDC &dc) {
 	Draw(dc, color);
 }
 
-void EPolyline::Draw(CDC &dc, COLORREF coverColor) {
-	CGdiObject *pOldBrush = dc.SelectStockObject(NULL_BRUSH);
+void EPolygon::Draw(CDC &dc, COLORREF coverColor) {
+	CBrush brush;
+	brush.CreateSolidBrush(fillColor);
+	CGdiObject *pOldBrush = dc.SelectObject(&brush);
 	CPen pen;
-	pen.CreatePen(PS_SOLID, width, coverColor);
+	pen.CreatePen(PS_SOLID, lineWidth, coverColor);
 	CPen *pOldPen = dc.SelectObject(&pen);
-	
-	// 画出折线
-	EPoint * pNode = (EPoint *)nodeList[0];
-	dc.MoveTo(pNode->x, pNode->y);
-	for (int i = 1; i < nodeList.GetSize(); i++) {
-		EPoint *pNode = (EPoint *)nodeList[i];
-		dc.LineTo(pNode->x, pNode->y);
-	}
-	// 画出节点
-	for (int i = 0; i < nodeList.GetSize(); i++) {
-		EPoint *pNode = (EPoint *)nodeList[i];
-		pNode->Draw(dc, coverColor);
-	}
+
+	CPoint * pList = GetCPointList();
+	dc.Polygon(pList, nodeList.GetSize());
 
 	dc.SelectObject(pOldPen);
 	dc.SelectObject(pOldBrush);
 }
 
-void EPolyline::DrawLast(CDC & dc) {
+void EPolygon::DrawLast(CDC & dc) {
 	CGdiObject *pOldBrush = dc.SelectStockObject(NULL_BRUSH);
 	CPen pen;
-	pen.CreatePen(PS_SOLID, width, color);
+	pen.CreatePen(PS_SOLID, lineWidth, color);
 	CPen *pOldPen = dc.SelectObject(&pen);
 
 	EPoint * pStart = (EPoint *)nodeList[nodeList.GetSize() - 2];
 	EPoint * pEnd = (EPoint *)nodeList[nodeList.GetSize() - 1];
 	dc.MoveTo(pStart->x, pStart->y);
 	dc.LineTo(pEnd->x, pEnd->y);
-	pEnd->Draw(dc, color);
 
 	dc.SelectObject(pOldPen);
 	dc.SelectObject(pOldBrush);
 }
 
-Element * EPolyline::Copy() {
-	EPolyline * newPolyline = new EPolyline;
-	newPolyline->color = this->color;
-	newPolyline->width = this->width;
+Element * EPolygon::Copy() {
+	EPolygon * newPolygon = new EPolygon;
+	newPolygon->color = this->color;
+	newPolygon->lineWidth = this->lineWidth;
 	for (int i = 0; i < nodeList.GetSize(); i++) {
 		EPoint *pNode = (EPoint *)nodeList[i];
-		newPolyline->Add(pNode->GetCPoint());
+		newPolygon->Add(pNode->GetCPoint());
 	}
-	return newPolyline;
+	return newPolygon;
 }
 
-bool EPolyline::Select(CPoint point, unsigned short buffer) {
+bool EPolygon::Select(CPoint point, unsigned short buffer) {
 	bool result = false;
-	buffer += width / 2;
+	buffer += lineWidth / 2;
 	EPoint *pStart = (EPoint *)nodeList[0];
 	for (int i = 1; i < nodeList.GetSize(); i++) {
 		EPoint *pEnd = (EPoint *)nodeList[i];
 		ELine line;
 		line.Set(pStart->GetCPoint(), pEnd->GetCPoint());
-		line.SetLineWidth(width);
+		line.SetLineWidth(lineWidth);
 		if (line.Select(point, buffer)) {
 			result = true;
 			break;
-		} else {
+		}
+		else {
 			pStart = pEnd;
 		}
 	}
 	return result;
 }
 
-bool EPolyline::Select(CRect rangeRect) {
+bool EPolygon::Select(CRect rangeRect) {
 	bool result = false;
 	EPoint *pStart = (EPoint *)nodeList[0];
 	for (int i = 1; i < nodeList.GetSize(); i++) {
 		EPoint *pEnd = (EPoint *)nodeList[i];
 		ELine line;
 		line.Set(pStart->GetCPoint(), pEnd->GetCPoint());
-		line.SetLineWidth(width);
+		line.SetLineWidth(lineWidth);
 		if (line.Select(rangeRect)) {
 			result = true;
 			break;
-		} else {
+		}
+		else {
 			pStart = pEnd;
 		}
 	}
 	return result;
 }
 
-void EPolyline::Move(int deltaX, int deltaY) {
+void EPolygon::Move(int deltaX, int deltaY) {
 	for (int i = 0; i < nodeList.GetSize(); i++) {
 		nodeList[i]->Move(deltaX, deltaY);
 	}
 }
 
-void EPolyline::Zoom(CPoint center, double level) {
+void EPolygon::Zoom(CPoint center, double level) {
 	for (int i = 0; i < nodeList.GetSize(); i++) {
 		nodeList[i]->Zoom(center, level);
 	}
 }
 
-void EPolyline::SymmetryH(int axisX) {
+void EPolygon::SymmetryH(int axisX) {
 	for (int i = 0; i < nodeList.GetSize(); i++) {
 		nodeList[i]->SymmetryH(axisX);
 	}
 }
 
-void EPolyline::SymmetryV(int axisY) {
+void EPolygon::SymmetryV(int axisY) {
 	for (int i = 0; i < nodeList.GetSize(); i++) {
 		nodeList[i]->SymmetryV(axisY);
 	}
 }
 
-void EPolyline::RotateCW(CPoint center) {
+void EPolygon::RotateCW(CPoint center) {
 	for (int i = 0; i < nodeList.GetSize(); i++) {
 		nodeList[i]->RotateCW(center);
 	}
 }
 
-void EPolyline::RotateCCW(CPoint center) {
+void EPolygon::RotateCCW(CPoint center) {
 	for (int i = 0; i < nodeList.GetSize(); i++) {
 		nodeList[i]->RotateCCW(center);
 	}

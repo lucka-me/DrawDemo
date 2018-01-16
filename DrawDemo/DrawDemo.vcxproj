@@ -191,6 +191,7 @@
     <ClInclude Include="DrawDemo.h" />
     <ClInclude Include="DrawDemoDoc.h" />
     <ClInclude Include="DrawDemoView.h" />
+    <ClInclude Include="EPolygon.h" />
     <ClInclude Include="EPolyline.h" />
     <ClInclude Include="ERectangle.h" />
     <ClInclude Include="MainFrm.h" />
@@ -208,6 +209,7 @@
     <ClCompile Include="DrawDemo.cpp" />
     <ClCompile Include="DrawDemoDoc.cpp" />
     <ClCompile Include="DrawDemoView.cpp" />
+    <ClCompile Include="EPolygon.cpp" />
     <ClCompile Include="EPolyline.cpp" />
     <ClCompile Include="ERectangle.cpp" />
     <ClCompile Include="MainFrm.cpp" />

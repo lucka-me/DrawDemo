@@ -60,6 +60,9 @@
     <ClInclude Include="EPolyline.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="EPolygon.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DrawDemo.cpp">
@@ -99,6 +102,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="EPolyline.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EPolygon.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
