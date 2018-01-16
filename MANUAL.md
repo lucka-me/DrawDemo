@@ -1,8 +1,21 @@
-<div align=center><img src="./Resource/Banner.png" alt="DrawDemo"></div>
+<a href="https://github.com/lucka-me/DrawDemo"><div align=center><img src="./Resource/Banner.png" alt="DrawDemo"></div></a>
 
 <h1 align=center>DrawDemo 说明书</h1>
 
-本说明书包含 DrawDemo 的各项功能、用户界面和数据结构的说明。
+<p align="center">
+  <a href="#基本信息">基本信息</a> ·
+  <a href="#开发环境">开发环境</a> ·
+  <a href="#功能">功能</a> ·
+  <a href="#用户界面设计">用户界面设计</a> ·
+  <a href="#数据结构设计">数据结构设计</a> ·
+  <a href="#参考资料">参考资料</a>
+</p>
+
+<div align=center><img src="./Resource/MANUAL-QR.png" alt="本说明书二维码"></div>
+
+<p align="center">
+  <font color="gray">链接至本说明书的二维码</font>
+</p>
 
 ## 基本信息
 - 程序名称：DrawDemo
