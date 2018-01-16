@@ -1,4 +1,9 @@
-# DrawDemo 说明书
+<div align=center><img src="./Resource/Banner.png" alt="DrawDemo"></div>
+
+<h1 align=center>DrawDemo 说明书</h1>
+
+本说明书包含 DrawDemo 的各项功能、用户界面和数据结构的说明。
+
 ## 基本信息
 - 程序名称：DrawDemo
 - 程序类型：MFC 单文档应用程序
@@ -21,9 +26,10 @@
 - 绘图
   - 画点、线、折线、矩形、多边形<sup>`1.1.0`</sup>、椭圆
   - 画线、折线、矩形和椭圆时显示橡皮线
-- 快捷键操作
-- 工具栏操作
 - 在绘图、编辑时显示鼠标坐标
+- 工具栏操作
+- 注册表操作，包括快捷键注册、工具栏注册、`.ddd` 文档类型和文档图标注册。
+- 快捷键操作
 
 ### 快捷键列表
 | Hot Key           | Description
@@ -39,14 +45,24 @@
 | `Del` `Backspace` | 删除
 | `Esc`             | 取消操作
 
+### 文档类型
+- 后缀名：`.ddd`
+- 文档类型名称：DrawDemo Draw 文档
+- 文档图标：
+
+<div align=center><img src="./Resource/Document-Icon.png" alt="DrawDemo Draw"></div>
+
 ## 用户界面设计
 ### 主界面及菜单
 主程序界面由菜单栏、工具栏、绘图区域和状态栏构成。
+
+工具栏可通过 MFC 默认提供的编辑器自由修改。
 
 <div align=center><img src="./Resource/Screenshot/MainFrame.png" alt="CDrawDemoView"></div>
 
 ### 画笔宽度设置对话框
 画笔宽度设置对话框由设置滑条、笔宽显示和笔宽预览区域构成。
+
 <div align=center><img src="./Resource/Screenshot/CPenWidthDialog.png" alt="CPenWidthDialog"></div>
 
 ## 数据结构设计
@@ -93,6 +109,8 @@ typedef enum _ElementType
 ### Element
 DrawDemo 的核心类，是所有图形类的基类，提供序列化、获取图形类型、绘制图形、复制、选择、移动、缩放、对称、旋转的虚函数，以及一个颜色变量。
 
+其中点图形 `EPoint` 是其余各类图形的基础。
+
 #### 继承关系
 ##### 基类
 - `CObject`
@@ -134,7 +152,7 @@ DrawDemo 的核心类，是所有图形类的基类，提供序列化、获取�
 ```cpp
 Element();
 ```
-构造 `Element` 实体，同时将成员 `color` 设置为黑色 `RGB(0 ,0 , 0)`
+构造 `Element` 实体，同时将成员 `color` 设置为黑色 `RGB(0, 0, 0)`
 #### Element::~Element
 ```cpp
 virtual ~Element();
@@ -171,9 +189,9 @@ virtual Element * Copy();
 virtual bool Select(CPoint point, unsigned short buffer = 2);
 virtual bool Select(CRect rangeRect);
 ```
-若传入一个 `CPoint` 则判此点是否选中图形，缓冲区大小 `buffer` 默认为2。
+若传入一个 `CPoint` 则判此点是否选中图形（点选），缓冲区大小 `buffer` 默认为2。
 
-若传入一个 `CRect` 则判断此区域是否选中图形。
+若传入一个 `CRect` 则判断此区域是否选中图形（选取区域），此时不支持缓冲区。
 
 #### Element::Move
 ```cpp
@@ -185,7 +203,7 @@ virtual void Move(int deltaX, int deltaY);
 ```cpp
 virtual void Zoom(CPoint center, double level);
 ```
-以 `center` 为中心，进行比例为 `level` 的缩放
+以 `center` 为中心，进行比例为 `level` 的缩放。
 
 #### Element::RotateCW
 ```cpp
@@ -212,9 +230,9 @@ virtual void RotateCCW(CPoint center);
 以 `center` 为中心逆时针旋转90°。
 
 ### EPoint
-表示点图形，在重写 `Element` 所有方法的基础上提供设置坐标、设置颜色和获取相应 `CPoint` 的方法。
+表示点图形，在重写 `Element` 所有方法的基础上提供设置坐标、设置颜色和获取相应 `CPoint` 的方法。绘制图形时将以一个 4×4 像素的矩形表示。
 
-绘制图形时将以一个 4×4 像素的矩形表示。
+是其余各图形的基础，它们的端点/顶点均以 `EPoint` 类成员存储，在进行图形变换时也要调用 `EPoint` 的相应方法。
 
 #### 继承关系
 ##### 基类
@@ -465,7 +483,7 @@ void SetLineWidth(unsigned short newLineWidth);
 
 
 ### EPolygon<sup>`1.1.0`</sup>
-表示多边形图形，在重写 `Element` 所有方法的基础上提供设置/增加节点、设置颜色、设置填充、设置线宽和绘制最后一段线的方法。
+表示多边形图形，与折线 `EPolyline` 类似，在重写 `Element` 所有方法的基础上提供设置/增加节点、设置颜色、设置填充、设置线宽和绘制最后一段线的方法。
 
 在移动、缩放、旋转时实际上是对 `nodeList` 中各 `EPoint` 成员进行相应的操作。
 
@@ -552,7 +570,7 @@ void DrawLast(CDC & dc);
 
 
 ### EEllipse
-表示矩形图形，以外接矩形的对角顶点确定位置和大小。在重写 `Element` 所有方法的基础上提供设置外接矩形对角顶点、设置颜色、设置填充和设置线宽的方法。
+表示矩形图形，与矩形 `ERectangle` 类似。以外接矩形的对角顶点确定位置和大小。在重写 `Element` 所有方法的基础上提供设置外接矩形对角顶点、设置颜色、设置填充和设置线宽的方法。
 
 在移动、缩放、旋转时实际上是对 `nodeList` 中各 `EPoint` 成员进行相应的操作。
 
@@ -712,7 +730,7 @@ DrawDemo 中负责操作主视图的类，包含绘图和编辑所需的所有�
 | `CDrawDemoView::selectedColor`  | `COLORREF`			 | 已选图形颜色
 | `CDrawDemoView::penColor`       | `COLORREF`			 | 点和线颜色
 | `CDrawDemoView::fillColor`      | `COLORREF`			 | 填充颜色
-| `CDrawDemoView::lineWidth`      | `int`						 | 线宽
+| `CDrawDemoView::lineWidth`      | `int`						 | 画笔线宽
 
 ##### 消息映射函数
 | Name                 | Message ID               | Description
@@ -752,7 +770,9 @@ DrawDemo 中负责操作主视图的类，包含绘图和编辑所需的所有�
 | `OnCancelOpr`        | `ID_CANCEL_OPR`          | 菜单-编辑-取消
 
 ### CPenWidthDialog
-DrawDemo 中负责操作设置笔宽对话框的类，包含设置和预览笔宽所需的所有方法和变量，并包含了响应菜单消息和鼠标消息的映射函数。
+DrawDemo 中负责操作设置笔宽对话框的类，包含初始化对话框、滑条设置、预览笔宽、在父视图中获取新笔宽所需的所有方法和变量，并包含了响应滑条消息的映射函数。
+
+笔宽的设置范围为 1~127。
 
 #### 继承关系
 ##### 基类
@@ -773,7 +793,7 @@ DrawDemo 中负责操作设置笔宽对话框的类，包含设置和预览笔�
 | :----------------------------- | :--------------- | :----------
 | `CPenWidthDialog::penWidth`    | `unsigned short` | 笔宽
 | `CPenWidthDialog::slider`      | `CSliderCtrl`    | 滑条
-| `CPenWidthDialog::staticText`  | `CStatic`        | 显示笔宽文本的静态控件
+| `CPenWidthDialog::staticText`  | `CStatic`        | 显示笔宽的静态文本控件
 | `CPenWidthDialog::preview`     | `CStatic`        | 预览笔宽的静态控件
 | `CPenWidthDialog::previewRect` | `CRect`          | 预览笔宽的静态控件区域
 | `CPenWidthDialog::pPreviewDC`  | `CDC *`          | 预览笔宽的静态控件显示
