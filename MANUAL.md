@@ -82,19 +82,19 @@
 本程序的核心数据结构包括 `CObject` 的派生类 `Element` 和其派生类 `EPoint`、`ELine`、`EPolyline`、`ERectangle`、`EPolygon`、`EEllipse`，它们用于存储各种图形、进行图形变换，以及用于存储图形的指针数组 `ElementArray`，同时还有控制主视图的 `CDrawDemoView` 及控制画笔宽度设置对话框的 `CPenWidthDialog` 类。
 
 ### 目录
-- [ElementType](#ElementType)
-- [enum Operation](#enum-Operation)
-- [Element](#Element)
-- [EPoint](#EPoint)
-- [ELine](#ELine)
-- [EPolyline](#EPolyline)
-- [ERectangle](#ERectangle)
-- [EPolygon](#EPolygon)
-- [EEllipse](#EEllipse)
-- [ElementArray](#ElementArray)
-- [CDrawDemoDoc](#CDrawDemoDoc)
-- [CDrawDemoView](#CDrawDemoView)
-- [CPenWidthDialog](#CPenWidthDialog)
+- [ElementType](#elementtype)
+- [enum Operation](#enum-operation)
+- [Element](#element)
+- [EPoint](#epoint)
+- [ELine](#eline)
+- [EPolyline](#epolyline)
+- [ERectangle](#erectangle)
+- [EPolygon](#epolygon110)
+- [EEllipse](#eellipse)
+- [ElementArray](#elementarray)
+- [CDrawDemoDoc](#cdrawdemodoc)
+- [CDrawDemoView](#cdrawdemoview)
+- [CPenWidthDialog](#cpenwidthdialog)
 
 ### ElementType
 用于标识 `Element` 图形的子类类型。
