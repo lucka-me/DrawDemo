@@ -17,10 +17,11 @@ void EPolygon::Serialize(CArchive & ar) {
 	nodeList.Serialize(ar);
 	if (ar.IsStoring()) {
 		ar << lineWidth;
+		ar << fillColor;
 	}
 	else {
 		ar >> lineWidth;
-
+		ar >> fillColor;
 	}
 }
 
